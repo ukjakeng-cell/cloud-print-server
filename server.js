@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import pool from "./db.js";
+import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
 
 const app = express();
 app.use(cors());
@@ -23,4 +24,9 @@ app.get("/db-test", async (req, res) => {
 
 app.listen(3000, () => {
   console.log("Server started at http://localhost:3000");
+});
+
+app.get('/me', ClerkExpressRequireAuth(), (req, res) => {
+  const userId = req.auth.userId;
+  res.json({ authenticated: true, userId });
 });
